@@ -20,22 +20,11 @@ const s = (p) => {
     }
 
     p.draw = () => {
-        p.background(200, 200, 100);
-        p.fill(255, 100);
-        p.noStroke();
-        p.ellipse(p.mouseX, p.mouseY, 100, 100);
-        
-        // if (p.mouseIsPressed) {
-        //     p.fill(random(255),random(255),random(255))
-        //     p.noStroke()
-        //     p.ellipse(random(255), random(255), random(100), random(100))
-        // }
-        // if (p.mouseIsPressed) {
-        //     p.fill(0);
-        //   } else {
-        //     p.fill(255);
-        //   }
-        // p.ellipse(p.mouseX, p.mouseY, 80, 80);
+        if (p.mouseIsPressed) {
+            p.fill(p.random(255),p.random(255),p.random(255))
+            p.noStroke()
+            p.ellipse(p.random(p.windowWidth), p.random(p.windowHeight), p.random(100), p.random(100))
+        }
     }
 }
 
