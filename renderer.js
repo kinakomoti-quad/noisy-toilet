@@ -5,27 +5,64 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
-// import p5 from "p5.min.js"
-
 
 const s = (p) => {
 
-    let circle_color = p.color("#ffffff")
-    let circle_x = 0
-    let circle_y = 0
+    var _num = 10; //一度に生成する円の数
+    var _circleArr = [];
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
-        p.background(100)
+        p.background(200)
     }
 
     p.draw = () => {
-        if (p.mouseIsPressed) {
-            p.fill(p.random(255),p.random(255),p.random(255))
-            p.noStroke()
-            p.ellipse(p.random(p.windowWidth), p.random(p.windowHeight), p.random(100), p.random(100))
+        for (var i=0; i<_circleArr.length; i++) {
+            thisCirc = _circleArr[i];
+            // thisCirc.updateMe();
         }
     }
+
+    p.mouseReleased = () => {
+        p.drawCircles()
+        p.print('tick') //デバッグ用出力
+    }
+
+    p.drawCircles = () => {
+        var thisCirc
+        for (var i=0; i<_num; i++) {
+            thisCirc = new Circle ()
+            thisCirc.drawMe();
+            _circleArr.push(thisCirc);     
+        }
+    }
+    
+    class Circle {
+        constructor() {
+            this.x = p.random(p.width);
+            this.y = p.random(p.height);
+            this.radius = p.random(100) + 10;
+            this.linecol_r = p.random(255);
+            this.linecol_g = p.random(255);
+            this.linecol_b = p.random(255);
+            this.fillcol_r = p.random(255);
+            this.fillcol_g = p.random(255);
+            this.fillcol_b = p.random(255);
+            this.alpha = p.random(255);
+            this.xmove = p.random(4) - 2;
+            this.ymove = p.random(4) - 2;
+        }
+
+        drawMe() {
+            p.noStroke()
+            p.fill(this.fillcol_r, this.fillcol_g, this.fillcol_b, this.alpha);
+            p.ellipse(this.x, this.y, this.radius*2, this.radius*2);
+            p.stroke(this.linecol_r, this.linecol_g, this.linecol_b, 150);
+            p.noFill();
+            p.ellipse(this.x, this.y, 10, 10);
+        }
+    }
+
 }
 
 const app = new p5(s)
