@@ -1,5 +1,8 @@
 # 環境設定とか
 ## nodejsインストール
+```
+sudo apt install nodejs npm
+```
 ## electron準備
 ```
 npm install --save-dev electron
