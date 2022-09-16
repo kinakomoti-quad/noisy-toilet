@@ -10,6 +10,10 @@ const s = (p) => {
 
     var _num = 10; //一度に生成する円の数
     var _circleArr = [];
+    var angle = 0;
+    var wash = false;
+    const center_x = p.windowWidth/2
+    const center_y = p.windowHeight/2
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -18,14 +22,26 @@ const s = (p) => {
 
     p.draw = () => {
         p.background(200)
-        for (var i=0; i<_circleArr.length; i++) {
+        if (wash === true) { //図形を流す処理
+            //回転処理
+            // p.translate(p.width * 0.5, p.height * 0.5)
+            // p.rotate(angle)
+            // angle += 0.01
+            // p.translate(0, 0)
+            //収縮処理はupdateMeで
+        }
+        for (var i=0; i<_circleArr.length; i++) { //図形の描画
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
         }
     }
 
     p.mouseReleased = () => {
-        p.drawCircles()
+        if (p.mouseButton == p.LEFT) { //左クリックで図形作成
+            p.drawCircles()
+        } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
+            wash = true
+        }
         p.print('tick') //デバッグ用出力
     }
 
@@ -59,17 +75,23 @@ const s = (p) => {
             p.fill(this.fillcol_r, this.fillcol_g, this.fillcol_b, this.alpha);
             p.ellipse(this.x, this.y, this.radius*2, this.radius*2);
             p.stroke(this.linecol_r, this.linecol_g, this.linecol_b, 150);
-            p.noFill();
+            p.noFill(); //おまけの円
             p.ellipse(this.x, this.y, 10, 10);
         }
 
         updateMe() {
-            this.x += this.xmove;
-            this.y += this.ymove;
-            if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; }
-            if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
-            if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
-            if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
+            if (wash === false) { //通常時
+                this.x += this.xmove;
+                this.y += this.ymove;
+                if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; }
+                if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
+                if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
+                if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
+            } else if (wash === true) { //流すとき
+                this.x += (center_x - this.x)/100
+                this.y += (center_y - this.y)/100
+                this.radius = this.radius * 0.99
+            }
             this.drawMe(); 
         }
     }
