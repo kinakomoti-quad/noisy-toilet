@@ -17,9 +17,10 @@ const s = (p) => {
     }
 
     p.draw = () => {
+        p.background(200)
         for (var i=0; i<_circleArr.length; i++) {
             thisCirc = _circleArr[i];
-            // thisCirc.updateMe();
+            thisCirc.updateMe();
         }
     }
 
@@ -60,6 +61,16 @@ const s = (p) => {
             p.stroke(this.linecol_r, this.linecol_g, this.linecol_b, 150);
             p.noFill();
             p.ellipse(this.x, this.y, 10, 10);
+        }
+
+        updateMe() {
+            this.x += this.xmove;
+            this.y += this.ymove;
+            if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; }
+            if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
+            if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
+            if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
+            this.drawMe(); 
         }
     }
 
