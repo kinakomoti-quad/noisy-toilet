@@ -26,23 +26,25 @@ const s = (p) => {
 
     p.draw = () => {
         p.background(200)
+        p.push()
+        p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
+        p.ellipse(0,0, 50, 50) //原点確認
         if (wash === true) { //図形を流す処理
             //回転処理
-            // p.translate(p.width * 0.5, p.height * 0.5)
-            // p.rotate(angle)
-            // angle += 0.01
-            // p.translate(0, 0)
+            p.rotate(angle)
+            angle += 0.01
             //収縮処理はupdateMeで
         }
         for (var i=0; i<_circleArr.length; i++) { //図形の描画
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
         }
-
-        //音声レベル確認テキスト
+        p.pop() //原点を左上に戻す
+        //パラメータ確認テキスト
         p.textSize(16)
         p.fill(255)
-        p.text('volume level' + mic.getLevel(), 20, 20)
+        p.text('volume level' + mic.getLevel() , 20, 20)
+        p.text('angle' + angle ,20, 40)
     }
 
     p.mouseReleased = () => {
@@ -51,8 +53,6 @@ const s = (p) => {
         } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
         }
-        console.log(mic.getLevel()) //デバッグ用出力
-        console.log('tick')        
     }
 
     p.drawCircles = () => {
@@ -66,8 +66,8 @@ const s = (p) => {
     
     class Circle {
         constructor() {
-            this.x = p.random(p.width);
-            this.y = p.random(p.height);
+            this.x = p.random(p.width) - p.width/2;
+            this.y = p.random(p.height) - p.height/2;
             this.radius = p.random(100) + 10;
             this.linecol_r = p.random(255);
             this.linecol_g = p.random(255);
@@ -93,13 +93,14 @@ const s = (p) => {
             if (wash === false) { //通常時
                 this.x += this.xmove;
                 this.y += this.ymove;
-                if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; }
-                if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
-                if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
-                if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
+                //ウィンドウ境界動作
+                // if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; } 
+                // if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
+                // if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
+                // if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
             } else if (wash === true) { //流すとき
-                this.x += (center_x - this.x)/100
-                this.y += (center_y - this.y)/100
+                this.x = this.x * 0.99
+                this.y = this.y * 0.99
                 this.radius = this.radius * 0.99
             }
             this.drawMe(); 
