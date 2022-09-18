@@ -11,7 +11,10 @@
           "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
         },
         "args" : ["."],
-        "outputCapture": "std"
+        "outputCapture": "std",
+        "env": {
+          "NODE_ENV": "debug",
+        }
       }
     ]
   }
