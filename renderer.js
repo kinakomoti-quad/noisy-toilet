@@ -38,6 +38,11 @@ const s = (p) => {
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
         }
+
+        //音声レベル確認テキスト
+        p.textSize(16)
+        p.fill(255)
+        p.text('volume level' + mic.getLevel(), 20, 20)
     }
 
     p.mouseReleased = () => {
