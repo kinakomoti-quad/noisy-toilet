@@ -12,8 +12,6 @@ const s = (p) => {
     var _circleArr = [];
     var angle = 0;
     var wash = false;
-    const center_x = p.windowWidth/2
-    const center_y = p.windowHeight/2
 
     let mic; //マイク入力
 
@@ -93,11 +91,9 @@ const s = (p) => {
             if (wash === false) { //通常時
                 this.x += this.xmove;
                 this.y += this.ymove;
-                //ウィンドウ境界動作
-                // if (this.x > (p.width+this.radius)) { this.x = 0 - this.radius; } 
-                // if (this.x < (0-this.radius)) { this.x = p.width + this.radius; }
-                // if (this.y > (p.height+this.radius)) { this.y = 0 - this.radius; }
-                // if (this.y < (0-this.radius)) { this.y = p.height + this.radius; }
+                //ウィンドウ境界で跳ね返る
+                if (this.x > p.width/2 - this.radius || this.x < - p.width/2 + this.radius) {this.xmove = this.xmove*(-1)}
+                if (this.y > p.height/2 - this.radius || this.y < - p.height/2 + this.radius) {this.ymove = this.ymove*(-1)}
             } else if (wash === true) { //流すとき
                 this.x = this.x * 0.99
                 this.y = this.y * 0.99
