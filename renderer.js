@@ -5,6 +5,7 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
+// import p5 from 'p5'
 
 const s = (p) => {
 
@@ -15,9 +16,13 @@ const s = (p) => {
     const center_x = p.windowWidth/2
     const center_y = p.windowHeight/2
 
+    // let mic; //マイク入力
+
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.background(200)
+        // mic = new p5.AudioIn()
+        // mic.start();
     }
 
     p.draw = () => {
@@ -42,7 +47,8 @@ const s = (p) => {
         } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
         }
-        p.print('tick') //デバッグ用出力
+        // p.print(mic.getLevel()) //デバッグ用出力
+        console.log('tick')
     }
 
     p.drawCircles = () => {
