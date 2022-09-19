@@ -23,6 +23,7 @@ const s = (p) => {
         p.background(200)
         mic = new p5.AudioIn()
         mic.start();
+        sound_wash = p.loadSound("sound/sound-wash.mp3")
     }
 
     p.draw = () => {
@@ -96,6 +97,7 @@ const s = (p) => {
     p.mousePressed = () => {
         if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
+            // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
         }
     }
     
