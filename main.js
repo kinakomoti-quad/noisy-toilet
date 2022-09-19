@@ -17,7 +17,7 @@ function createWindow () {
 
   // Open the DevTools.
   if (process.env.NODE_ENV === "debug") {  
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools({mode: 'detach'});
   }
 }
 

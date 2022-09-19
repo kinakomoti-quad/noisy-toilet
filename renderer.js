@@ -8,12 +8,15 @@
 
 const s = (p) => {
 
-    var _num = 10; //一度に生成する円の数
-    var _circleArr = [];
+    var _circleArr = []; //移動中の泡の配列
+    var _generatngArr = []; //生成中の泡の配列
     var angle = 0;
     var wash = false;
 
     let mic; //マイク入力
+    let generatingStatus; //泡が成長中か否か
+
+    const volume_threshold = 0.04 //音量閾値
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -23,9 +26,17 @@ const s = (p) => {
     }
 
     p.draw = () => {
+        let volume = mic.getLevel()
+        if (p.mouseIsPressed === true || volume > volume_threshold) { //泡の生成をするか否か
+            generatingStatus = true
+        } else {
+            generatingStatus = false
+        }
         p.background(200)
+
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
+        p.fill(255)
         p.ellipse(0,0, 50, 50) //原点確認
         if (wash === true) { //図形を流す処理
             //回転処理
@@ -33,32 +44,58 @@ const s = (p) => {
             angle += 0.01
             //収縮処理はupdateMeで
         }
-        for (var i=0; i<_circleArr.length; i++) { //図形の描画
+        if (wash === false && generatingStatus === true) { //泡の生成
+            if (_generatngArr.length == 0) {
+                thisCirc = new Circle ()
+                _generatngArr.push(thisCirc)
+            }
+        }
+        for (var i=0; i<_circleArr.length; i++) { //泡の移動
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
         }
+        for (var i=0; i<_generatngArr.length; i++) { //泡の成長
+            thisCirc = _generatngArr[i];
+            thisCirc.glowMe()
+        }
+        if (generatingStatus === false) { //泡を成長配列から移動配列へ移行
+            while (_generatngArr.length != 0) {
+                thisCirc = _generatngArr.pop()
+                _circleArr.push(thisCirc)
+            }
+        }
         p.pop() //原点を左上に戻す
+
+        //ここから下は将来的にはdebugモードにしたい
         //パラメータ確認テキスト
         p.textSize(16)
         p.fill(255)
-        p.text('volume level' + mic.getLevel() , 20, 20)
-        p.text('angle' + angle ,20, 40)
+        p.text('volume level: ' + mic.getLevel() , 20, 20)
+        p.text('generatingstatus: ' + generatingStatus ,20, 40)
+        p.text('circle number: ' + _circleArr.length, 20, 60)
+        p.text('generating number: ' + _generatngArr.length, 20, 80)
+
+        //音量図示
+        // 音量としきい値をいっしょにグラフに表示する準備
+        let y = p.map(volume, 0, 1, p.height, 0);
+        let ythreshold = p.map(volume_threshold, 0, 1, p.height, 0);
+        p.noStroke();
+        p.fill(175);
+        // 棒グラフの背景部
+        p.rect(0, 0, 20, p.height);
+        // 棒グラフの音量部
+        p.fill(0);
+        p.rect(0, y, 20, y);
+        // しきい値の横線
+        p.stroke(0);
+        p.line(0, ythreshold, 19, ythreshold);
     }
 
-    p.mouseReleased = () => {
-        if (p.mouseButton == p.LEFT) { //左クリックで図形作成
-            p.drawCircles()
-        } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
+    //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
+
+    p.mousePressed = () => {
+        if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
-        }
-    }
-
-    p.drawCircles = () => {
-        var thisCirc
-        for (var i=0; i<_num; i++) {
-            thisCirc = new Circle ()
-            thisCirc.drawMe();
-            _circleArr.push(thisCirc);     
         }
     }
     
@@ -76,6 +113,7 @@ const s = (p) => {
             this.alpha = p.random(255);
             this.xmove = p.random(4) - 2;
             this.ymove = p.random(4) - 2;
+            this.glowing = true;
         }
 
         drawMe() {
@@ -101,6 +139,13 @@ const s = (p) => {
             }
             this.drawMe(); 
         }
+
+        glowMe() {
+            this.radius += 1
+            if (generatingStatus === false) {this.glowing = false}
+            this.drawMe()
+        }
+
     }
 
 }
