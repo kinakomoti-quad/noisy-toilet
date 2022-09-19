@@ -60,7 +60,7 @@ const s = (p) => {
             }
         }
         p.pop() //原点を左上に戻す
-        //パラメータ確認テキスト
+        //パラメータ確認テキスト、将来的にはdebugモードにしたい
         p.textSize(16)
         p.fill(255)
         p.text('volume level: ' + mic.getLevel() , 20, 20)
