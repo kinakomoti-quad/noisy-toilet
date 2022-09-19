@@ -8,7 +8,6 @@
 
 const s = (p) => {
 
-    var _num = 10; //一度に生成する円の数
     var _circleArr = []; //移動中の泡の配列
     var _generatngArr = []; //生成中の泡の配列
     var angle = 0;
@@ -46,7 +45,7 @@ const s = (p) => {
                 _generatngArr.push(thisCirc)
             }
         }
-        for (var i=0; i<_circleArr.length; i++) { //図形の描画
+        for (var i=0; i<_circleArr.length; i++) { //泡の移動
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
         }
@@ -73,19 +72,8 @@ const s = (p) => {
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
 
     p.mouseReleased = () => {
-        if (p.mouseButton == p.LEFT) { //左クリックで図形作成
-            // p.drawCircles()
-        } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
+        if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
-        }
-    }
-
-    p.drawCircles = () => { //泡生成
-        var thisCirc
-        for (var i=0; i<_num; i++) {
-            thisCirc = new Circle ()
-            thisCirc.drawMe();
-            _circleArr.push(thisCirc);     
         }
     }
     
