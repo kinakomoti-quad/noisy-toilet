@@ -32,6 +32,7 @@ const s = (p) => {
         p.background(200)
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
+        p.fill(255)
         p.ellipse(0,0, 50, 50) //原点確認
         if (wash === true) { //図形を流す処理
             //回転処理
@@ -60,13 +61,32 @@ const s = (p) => {
             }
         }
         p.pop() //原点を左上に戻す
-        //パラメータ確認テキスト、将来的にはdebugモードにしたい
+
+        //ここから下は将来的にはdebugモードにしたい
+        //パラメータ確認テキスト
         p.textSize(16)
         p.fill(255)
         p.text('volume level: ' + mic.getLevel() , 20, 20)
         p.text('generatingstatus: ' + generatingStatus ,20, 40)
         p.text('circle number: ' + _circleArr.length, 20, 60)
         p.text('generating number: ' + _generatngArr.length, 20, 80)
+
+        //音量図示
+        let volume = mic.getLevel()
+        let threshold = 0.1 //閾値
+        // 音量としきい値をいっしょにグラフに表示する準備
+        let y = p.map(volume, 0, 1, p.height, 0);
+        let ythreshold = p.map(threshold, 0, 1, p.height, 0);
+        p.noStroke();
+        p.fill(175);
+        // 棒グラフの背景部
+        p.rect(0, 0, 20, p.height);
+        // 棒グラフの音量部
+        p.fill(0);
+        p.rect(0, y, 20, y);
+        // しきい値の横線
+        p.stroke(0);
+        p.line(0, ythreshold, 19, ythreshold);
     }
 
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
