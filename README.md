@@ -3,6 +3,7 @@
 ```
 sudo apt install nodejs npm
 ```
+aptで取得するnodejsのバージョンが古いので、手動でwebページから落としてくる方が確実です
 ## electron準備
 ```
 npm install --save-dev electron
