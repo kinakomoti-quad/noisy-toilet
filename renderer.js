@@ -16,6 +16,8 @@ const s = (p) => {
     let mic; //マイク入力
     let generatingStatus; //泡が成長中か否か
 
+    const volume_threshold = 0.04 //音量閾値
+
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.background(200)
@@ -24,12 +26,14 @@ const s = (p) => {
     }
 
     p.draw = () => {
-        if (p.mouseIsPressed === true) { //泡の生成をするか否か
+        let volume = mic.getLevel()
+        if (p.mouseIsPressed === true || volume > volume_threshold) { //泡の生成をするか否か
             generatingStatus = true
         } else {
             generatingStatus = false
         }
         p.background(200)
+
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
         p.fill(255)
@@ -72,11 +76,9 @@ const s = (p) => {
         p.text('generating number: ' + _generatngArr.length, 20, 80)
 
         //音量図示
-        let volume = mic.getLevel()
-        let threshold = 0.1 //閾値
         // 音量としきい値をいっしょにグラフに表示する準備
         let y = p.map(volume, 0, 1, p.height, 0);
-        let ythreshold = p.map(threshold, 0, 1, p.height, 0);
+        let ythreshold = p.map(volume_threshold, 0, 1, p.height, 0);
         p.noStroke();
         p.fill(175);
         // 棒グラフの背景部
@@ -91,7 +93,7 @@ const s = (p) => {
 
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
 
-    p.mouseReleased = () => {
+    p.mousePressed = () => {
         if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
         }
