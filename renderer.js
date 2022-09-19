@@ -9,11 +9,13 @@
 const s = (p) => {
 
     var _num = 10; //一度に生成する円の数
-    var _circleArr = [];
+    var _circleArr = []; //移動中の泡の配列
+    var _generatngArr = []; //生成中の泡の配列
     var angle = 0;
     var wash = false;
 
     let mic; //マイク入力
+    let generatingStatus; //泡が成長中か否か
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -23,6 +25,11 @@ const s = (p) => {
     }
 
     p.draw = () => {
+        if (p.mouseIsPressed === true) { //泡の生成をするか否か
+            generatingStatus = true
+        } else {
+            generatingStatus = false
+        }
         p.background(200)
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
@@ -33,27 +40,47 @@ const s = (p) => {
             angle += 0.01
             //収縮処理はupdateMeで
         }
+        if (wash === false && generatingStatus === true) { //泡の生成
+            if (_generatngArr.length == 0) {
+                thisCirc = new Circle ()
+                _generatngArr.push(thisCirc)
+            }
+        }
         for (var i=0; i<_circleArr.length; i++) { //図形の描画
             thisCirc = _circleArr[i];
             thisCirc.updateMe();
+        }
+        for (var i=0; i<_generatngArr.length; i++) { //泡の成長
+            thisCirc = _generatngArr[i];
+            thisCirc.glowMe()
+        }
+        if (generatingStatus === false) { //泡を成長配列から移動配列へ移行
+            while (_generatngArr.length != 0) {
+                thisCirc = _generatngArr.pop()
+                _circleArr.push(thisCirc)
+            }
         }
         p.pop() //原点を左上に戻す
         //パラメータ確認テキスト
         p.textSize(16)
         p.fill(255)
-        p.text('volume level' + mic.getLevel() , 20, 20)
-        p.text('angle' + angle ,20, 40)
+        p.text('volume level: ' + mic.getLevel() , 20, 20)
+        p.text('generatingstatus: ' + generatingStatus ,20, 40)
+        p.text('circle number: ' + _circleArr.length, 20, 60)
+        p.text('generating number: ' + _generatngArr.length, 20, 80)
     }
+
+    //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
 
     p.mouseReleased = () => {
         if (p.mouseButton == p.LEFT) { //左クリックで図形作成
-            p.drawCircles()
+            // p.drawCircles()
         } else if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
         }
     }
 
-    p.drawCircles = () => {
+    p.drawCircles = () => { //泡生成
         var thisCirc
         for (var i=0; i<_num; i++) {
             thisCirc = new Circle ()
@@ -76,6 +103,7 @@ const s = (p) => {
             this.alpha = p.random(255);
             this.xmove = p.random(4) - 2;
             this.ymove = p.random(4) - 2;
+            this.glowing = true;
         }
 
         drawMe() {
@@ -101,6 +129,13 @@ const s = (p) => {
             }
             this.drawMe(); 
         }
+
+        glowMe() {
+            this.radius += 1
+            if (generatingStatus === false) {this.glowing = false}
+            this.drawMe()
+        }
+
     }
 
 }
