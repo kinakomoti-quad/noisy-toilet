@@ -1,9 +1,6 @@
 # 環境設定とか
 ## nodejsインストール
-```
-sudo apt install nodejs npm
-```
-aptで取得するnodejsのバージョンが古いので、手動でwebページから落としてくる方が確実です
+aptで取得するnodejsのバージョンが古いので、手動でwebページから落としてくるのが確実です
 ## npm準備
 ```
 npm install
