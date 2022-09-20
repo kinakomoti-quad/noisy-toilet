@@ -17,6 +17,7 @@ const s = (p) => {
     let generatingStatus; //泡が成長中か否か
 
     const volume_threshold = 0.04 //音量閾値
+    const wash_time = 10000 //流す処理の時間、ミリ秒
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -98,9 +99,17 @@ const s = (p) => {
         if (p.mouseButton == p.RIGHT) { //右クリックで流す
             wash = true
             // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
+            setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
         }
     }
     
+    p.resetAll = () => {
+        wash = false
+        _circleArr.length = 0
+        _generatngArr.length = 0
+        sound_wash.stop()
+    }
+
     class Circle {
         constructor() {
             this.x = p.random(p.width) - p.width/2;
