@@ -6,6 +6,30 @@
  * to expose Node.js functionality from the main process.
  */
 
+ var lever = false; //レバー入力
+
+ //シリアル通信
+const { SerialPort } = require('serialport')
+const { ReadlineParser } = require('@serialport/parser-readline')
+SerialPort.list((err, ports) => { //ポート確認
+    ports.forEach((port) => {
+      console.log(port);
+    })
+})
+const port = new SerialPort({
+    path: "COM1", //使用するCOMポート割り当て 
+    baudRate: 9600
+})
+const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }))
+parser.on('data', function (data) { //onが送られてきたときに反応
+    if (data == 'on') {
+        lever = true
+        setTimeout(() => {lever = false}, 500) //0.5秒後にレバーをオフにする
+    }
+    console.log(data)
+})
+
+//描画
 const s = (p) => {
 
     var _circleArr = []; //移動中の泡の配列
@@ -17,6 +41,7 @@ const s = (p) => {
     let generatingStatus; //泡が成長中か否か
 
     const volume_threshold = 0.04 //音量閾値
+    const wash_time = 10000 //流す処理の時間、ミリ秒
 
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
@@ -34,6 +59,12 @@ const s = (p) => {
             generatingStatus = false
         }
         p.background(200)
+
+        if (lever === true && wash === false) {
+            wash = true
+            // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
+            setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
+        }
 
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
@@ -75,6 +106,8 @@ const s = (p) => {
         p.text('generatingstatus: ' + generatingStatus ,20, 40)
         p.text('circle number: ' + _circleArr.length, 20, 60)
         p.text('generating number: ' + _generatngArr.length, 20, 80)
+        p.text('lever:'+ lever, 20, 100)
+        p.text('wash:'+ wash, 20, 120)
 
         //音量図示
         // 音量としきい値をいっしょにグラフに表示する準備
@@ -95,12 +128,19 @@ const s = (p) => {
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
 
     p.mousePressed = () => {
-        if (p.mouseButton == p.RIGHT) { //右クリックで流す
-            wash = true
-            // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
+        if (p.mouseButton == p.RIGHT) { //右クリックで0.5秒だけレバーをオンにする
+            lever = true
+            setTimeout(() => {lever = false}, 500)
         }
     }
     
+    p.resetAll = () => {
+        wash = false
+        _circleArr.length = 0
+        _generatngArr.length = 0
+        sound_wash.stop()
+    }
+
     class Circle {
         constructor() {
             this.x = p.random(p.width) - p.width/2;
