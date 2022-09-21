@@ -5,15 +5,31 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
+
+ var lever = false; //レバー入力
+
+ //シリアル通信
 const { SerialPort } = require('serialport')
-// const serialport = new SerialPort({  path: "COM1", baudRate: 9600 })
-// console.log(SerialPort.list())
+const { ReadlineParser } = require('@serialport/parser-readline')
 SerialPort.list((err, ports) => { //ポート確認
     ports.forEach((port) => {
       console.log(port);
     })
 })
+const port = new SerialPort({
+    path: "COM1", //使用するCOMポート割り当て 
+    baudRate: 9600
+})
+const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }))
+parser.on('data', function (data) { //onが送られてきたときに反応
+    if (data == 'on') {
+        lever = true
+        setTimeout(() => {lever = false}, 500) //0.5秒後にレバーをオフにする
+    }
+    console.log(data)
+})
 
+//描画
 const s = (p) => {
 
     var _circleArr = []; //移動中の泡の配列
@@ -21,7 +37,6 @@ const s = (p) => {
     var angle = 0;
     var wash = false;
 
-    var lever = false; //レバー入力
     let mic; //マイク入力
     let generatingStatus; //泡が成長中か否か
 
@@ -114,7 +129,6 @@ const s = (p) => {
 
     p.mousePressed = () => {
         if (p.mouseButton == p.RIGHT) { //右クリックで0.5秒だけレバーをオンにする
-            console.log('tick')
             lever = true
             setTimeout(() => {lever = false}, 500)
         }
