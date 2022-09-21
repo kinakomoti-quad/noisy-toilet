@@ -13,5 +13,9 @@ npm start
 - 以下のサイトから素材を落とし、"sound-wash.mp3"に名前を変えてsoundフォルダに放り込む
 - https://dova-s.jp/se/play166.html
 
+## 起動後
+- アプリの終了
+ctrl + W (cmd + W)
+
 ## 参考サイト
 https://qiita.com/mathrax-s/items/83aa9783e717b9eae5b4
