@@ -4,8 +4,13 @@ aptで取得するnodejsのバージョンが古いので、手動でwebペー�
 ## npm準備
 ```
 npm install
+```
+一回のみ
+## npm実行
+```
 npm start
 ```
+
 - これで動くはず
 - linux向けにビルドするつもりだったけどまだできてないのでとりあえずこれでお願いします
 - nodejsがうまく動かなかった場合、とりあえずindex.htmlを開けばprocessingの動作は確認できます。renderer.jsをp5.jsエディタにコピペしても見れます。
