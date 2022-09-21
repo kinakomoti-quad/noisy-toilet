@@ -21,6 +21,7 @@ const s = (p) => {
     var angle = 0;
     var wash = false;
 
+    var lever = false; //レバー入力
     let mic; //マイク入力
     let generatingStatus; //泡が成長中か否か
 
@@ -43,6 +44,12 @@ const s = (p) => {
             generatingStatus = false
         }
         p.background(200)
+
+        if (lever === true && wash === false) {
+            wash = true
+            // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
+            setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
+        }
 
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
@@ -84,6 +91,8 @@ const s = (p) => {
         p.text('generatingstatus: ' + generatingStatus ,20, 40)
         p.text('circle number: ' + _circleArr.length, 20, 60)
         p.text('generating number: ' + _generatngArr.length, 20, 80)
+        p.text('lever:'+ lever, 20, 100)
+        p.text('wash:'+ wash, 20, 120)
 
         //音量図示
         // 音量としきい値をいっしょにグラフに表示する準備
@@ -104,10 +113,10 @@ const s = (p) => {
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
 
     p.mousePressed = () => {
-        if (p.mouseButton == p.RIGHT) { //右クリックで流す
-            wash = true
-            // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
-            setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
+        if (p.mouseButton == p.RIGHT) { //右クリックで0.5秒だけレバーをオンにする
+            console.log('tick')
+            lever = true
+            setTimeout(() => {lever = false}, 500)
         }
     }
     
