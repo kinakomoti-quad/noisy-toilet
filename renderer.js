@@ -7,7 +7,7 @@
  */
 
 var lever = false; //レバー入力
-const debug_mode = false //デバッグモード、いずれグローバルから取得したい
+const debug_mode = true //デバッグモード、いずれグローバルから取得したい
 
  //シリアル通信
 const { SerialPort } = require('serialport')
@@ -156,10 +156,10 @@ const s = (p) => {
             this.radius = p.random(100) + 10;
             this.linecol_r = p.random(255);
             this.linecol_g = p.random(255);
-            this.linecol_b = p.random(255);
+            this.linecol_b = 255
             this.fillcol_r = p.random(255);
             this.fillcol_g = p.random(255);
-            this.fillcol_b = p.random(255);
+            this.fillcol_b = 255;
             this.alpha = p.random(255);
             this.xmove = p.random(4) - 2;
             this.ymove = p.random(4) - 2;
@@ -171,8 +171,8 @@ const s = (p) => {
             p.fill(this.fillcol_r, this.fillcol_g, this.fillcol_b, this.alpha);
             p.ellipse(this.x, this.y, this.radius*2, this.radius*2);
             p.stroke(this.linecol_r, this.linecol_g, this.linecol_b, 150);
-            p.noFill(); //おまけの円
-            p.ellipse(this.x, this.y, 10, 10);
+            // p.noFill(); //おまけの円
+            // p.ellipse(this.x, this.y, 10, 10);
         }
 
         updateMe() {
