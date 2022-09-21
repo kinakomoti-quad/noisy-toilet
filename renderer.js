@@ -7,7 +7,7 @@
  */
 
 var lever = false; //レバー入力
-const debug_mode = true //デバッグモード、いずれグローバルから取得したい
+const debug_mode = false //デバッグモード、いずれグローバルから取得したい
 
  //シリアル通信
 const { SerialPort } = require('serialport')
@@ -18,12 +18,12 @@ SerialPort.list((err, ports) => { //ポート確認
     })
 })
 const port = new SerialPort({
-    path: "COM1", //使用するCOMポート割り当て 
+    path: "COM3", //使用するCOMポート割り当て 
     baudRate: 9600
 })
-const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }))
+const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 parser.on('data', function (data) { //onが送られてきたときに反応
-    if (data == 'on') {
+    if (data == '導通しました。') {
         lever = true
         setTimeout(() => {lever = false}, 500) //0.5秒後にレバーをオフにする
     }
