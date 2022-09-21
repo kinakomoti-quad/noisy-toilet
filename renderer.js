@@ -18,12 +18,12 @@ SerialPort.list((err, ports) => { //ポート確認
     })
 })
 const port = new SerialPort({
-    path: "COM1", //使用するCOMポート割り当て 
+    path: "COM3", //使用するCOMポート割り当て（要確認！）
     baudRate: 9600
 })
-const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }))
+const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 parser.on('data', function (data) { //onが送られてきたときに反応
-    if (data == 'on') {
+    if (data == '導通しました。') {
         lever = true
         setTimeout(() => {lever = false}, 500) //0.5秒後にレバーをオフにする
     }
@@ -156,10 +156,10 @@ const s = (p) => {
             this.radius = p.random(100) + 10;
             this.linecol_r = p.random(255);
             this.linecol_g = p.random(255);
-            this.linecol_b = p.random(255);
+            this.linecol_b = 255
             this.fillcol_r = p.random(255);
             this.fillcol_g = p.random(255);
-            this.fillcol_b = p.random(255);
+            this.fillcol_b = 255;
             this.alpha = p.random(255);
             this.xmove = p.random(4) - 2;
             this.ymove = p.random(4) - 2;
@@ -171,8 +171,8 @@ const s = (p) => {
             p.fill(this.fillcol_r, this.fillcol_g, this.fillcol_b, this.alpha);
             p.ellipse(this.x, this.y, this.radius*2, this.radius*2);
             p.stroke(this.linecol_r, this.linecol_g, this.linecol_b, 150);
-            p.noFill(); //おまけの円
-            p.ellipse(this.x, this.y, 10, 10);
+            // p.noFill(); //おまけの円
+            // p.ellipse(this.x, this.y, 10, 10);
         }
 
         updateMe() {

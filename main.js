@@ -7,6 +7,7 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true, // to allow require
       contextIsolation: false, // allow use with Electron 12+
