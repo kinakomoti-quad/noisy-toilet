@@ -6,7 +6,8 @@
  * to expose Node.js functionality from the main process.
  */
 
- var lever = false; //レバー入力
+var lever = false; //レバー入力
+const debug_mode = false //デバッグモード、いずれグローバルから取得したい
 
  //シリアル通信
 const { SerialPort } = require('serialport')
@@ -62,14 +63,19 @@ const s = (p) => {
 
         if (lever === true && wash === false) {
             wash = true
+            if (debug_mode === false) {
+                sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
+            }
             // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
             setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
         }
 
         p.push()
         p.translate(p.width/2, p.height/2) //原点をウィンドウの中心に
-        p.fill(255)
-        p.ellipse(0,0, 50, 50) //原点確認
+        if (debug_mode === true) {
+            p.fill(255)
+            p.ellipse(0,0, 50, 50) //原点確認
+        }
         if (wash === true) { //図形を流す処理
             //回転処理
             p.rotate(angle)
@@ -99,30 +105,32 @@ const s = (p) => {
         p.pop() //原点を左上に戻す
 
         //ここから下は将来的にはdebugモードにしたい
-        //パラメータ確認テキスト
-        p.textSize(16)
-        p.fill(255)
-        p.text('volume level: ' + mic.getLevel() , 20, 20)
-        p.text('generatingstatus: ' + generatingStatus ,20, 40)
-        p.text('circle number: ' + _circleArr.length, 20, 60)
-        p.text('generating number: ' + _generatngArr.length, 20, 80)
-        p.text('lever:'+ lever, 20, 100)
-        p.text('wash:'+ wash, 20, 120)
+        if (debug_mode === true) {
+            //パラメータ確認テキスト
+            p.textSize(16)
+            p.fill(255)
+            p.text('volume level: ' + mic.getLevel() , 20, 20)
+            p.text('generatingstatus: ' + generatingStatus ,20, 40)
+            p.text('circle number: ' + _circleArr.length, 20, 60)
+            p.text('generating number: ' + _generatngArr.length, 20, 80)
+            p.text('lever:'+ lever, 20, 100)
+            p.text('wash:'+ wash, 20, 120)
 
-        //音量図示
-        // 音量としきい値をいっしょにグラフに表示する準備
-        let y = p.map(volume, 0, 1, p.height, 0);
-        let ythreshold = p.map(volume_threshold, 0, 1, p.height, 0);
-        p.noStroke();
-        p.fill(175);
-        // 棒グラフの背景部
-        p.rect(0, 0, 20, p.height);
-        // 棒グラフの音量部
-        p.fill(0);
-        p.rect(0, y, 20, y);
-        // しきい値の横線
-        p.stroke(0);
-        p.line(0, ythreshold, 19, ythreshold);
+            //音量図示
+            // 音量としきい値をいっしょにグラフに表示する準備
+            let y = p.map(volume, 0, 1, p.height, 0);
+            let ythreshold = p.map(volume_threshold, 0, 1, p.height, 0);
+            p.noStroke();
+            p.fill(175);
+            // 棒グラフの背景部
+            p.rect(0, 0, 20, p.height);
+            // 棒グラフの音量部
+            p.fill(0);
+            p.rect(0, y, 20, y);
+            // しきい値の横線
+            p.stroke(0);
+            p.line(0, ythreshold, 19, ythreshold);
+        }
     }
 
     //押している間だけ成長、押したとき・離したときは使用しないで実装（音声の場合は始まりと終わりがない）
