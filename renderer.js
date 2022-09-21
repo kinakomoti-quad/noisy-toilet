@@ -5,6 +5,14 @@
  * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
  * to expose Node.js functionality from the main process.
  */
+const { SerialPort } = require('serialport')
+// const serialport = new SerialPort({  path: "COM1", baudRate: 9600 })
+// console.log(SerialPort.list())
+SerialPort.list((err, ports) => { //ポート確認
+    ports.forEach((port) => {
+      console.log(port);
+    })
+})
 
 const s = (p) => {
 
