@@ -7,7 +7,7 @@
  */
 
 var lever = false; //レバー入力
-const debug_mode = false //デバッグモード、いずれグローバルから取得したい
+const debug_mode = true //デバッグモード、いずれグローバルから取得したい
 
  //シリアル通信
 const { SerialPort } = require('serialport')
