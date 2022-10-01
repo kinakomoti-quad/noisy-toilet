@@ -6,8 +6,9 @@
  * to expose Node.js functionality from the main process.
  */
 
+// console.log(Date.now())
 var lever = false; //レバー入力
-const debug_mode = false //デバッグモード、いずれグローバルから取得したい
+const debug_mode = true //デバッグモード、いずれグローバルから取得したい
 
  //シリアル通信
 const { SerialPort } = require('serialport')
@@ -37,6 +38,7 @@ const s = (p) => {
     var _generatngArr = []; //生成中の泡の配列
     var angle = 0;
     var wash = false;
+    var leverDate = 0; //レバーを倒した時刻
 
     let mic; //マイク入力
     let generatingStatus; //泡が成長中か否か
@@ -68,6 +70,7 @@ const s = (p) => {
             }
             // sound_wash.play() //音声を流す、うるさいのでとりあえずオフ
             setTimeout(() => {p.resetAll()}, wash_time); //一定時間経過後リセット
+            leverDate = Date.now()
         }
 
         p.push()
@@ -113,8 +116,9 @@ const s = (p) => {
             p.text('generatingstatus: ' + generatingStatus ,20, 40)
             p.text('circle number: ' + _circleArr.length, 20, 60)
             p.text('generating number: ' + _generatngArr.length, 20, 80)
-            p.text('lever:'+ lever, 20, 100)
-            p.text('wash:'+ wash, 20, 120)
+            p.text('lever: '+ lever, 20, 100)
+            p.text('wash: '+ wash, 20, 120)
+            p.text('timeFromLever: ' + (Date.now() - leverDate), 20, 140)
 
             //音量図示
             // 音量としきい値をいっしょにグラフに表示する準備
