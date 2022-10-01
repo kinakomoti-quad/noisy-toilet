@@ -23,12 +23,12 @@ ctrl + W (cmd + W)
 
 ## 各種設定
 - main.js
--- fullscreen フルスクリーン表示制御
+  - fullscreen フルスクリーン表示制御
 
 - renderer.js 描画・通信関係
--- debug_mode オンにすると各種パラメータが表示されるようになる。音声入力や色の調整等にどうぞ
--- port シリアル通信の制御。pathを適切に設定する必要あり
--- class circle 泡の描画設定。色の設定とかはここを触る
+  - debug_mode オンにすると各種パラメータが表示されるようになる。音声入力や色の調整等にどうぞ
+  - port シリアル通信の制御。pathを適切に設定する必要あり
+  - class circle 泡の描画設定。色の設定とかはここを触る
 
 ## 参考サイト
 https://qiita.com/mathrax-s/items/83aa9783e717b9eae5b4
